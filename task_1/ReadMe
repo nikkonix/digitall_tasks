@@ -1,0 +1,10 @@
+# Docker build image
+docker build -t cert-checker .
+# Test the image before K8s deploy 
+docker run --rm cert-checker 20 # Warning threshold specified to 20, default value 30 days
+
+# K8s deployment 
+minikube image load cert-checker:latest
+kubectl apply -f cert-checker-deployment.yaml
+# Check the pod logs to see the output of the cert-checker script 
+kubectl logs deployment/cert-checker 
