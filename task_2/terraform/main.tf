@@ -3,9 +3,18 @@ resource "aws_vpc" "main" {
   cidr_block = var.vpc_cidr
 }
 
-resource "aws_subnet" "public" {
+# Subnet 1 
+resource "aws_subnet" "public_a" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.0.1.0/24"
+  availability_zone = "${var.aws_region}a"
+}
+
+# Subnet 2
+resource "aws_subnet" "public_b" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.0.2.0/24"
+  availability_zone = "${var.aws_region}b"
 }
 
 # Security Group
@@ -69,7 +78,10 @@ resource "aws_instance" "web" {
   ami                    = "ami-0da6daf1cd16df4e7"
   instance_type          = var.instance_type
   key_name               = var.key_name
-  subnet_id              = aws_subnet.public.id
+  subnet_id              = element(
+                            [aws_subnet.public_a.id, aws_subnet.public_b.id],
+                            count.index % 2
+                          )
   vpc_security_group_ids = [aws_security_group.web_sg.id]
   tags                   = {
     Name = "WebServer-${count.index}"
@@ -82,7 +94,10 @@ resource "aws_lb" "web_lb" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.web_sg.id]
-  subnets            = [aws_subnet.public.id]
+  subnets            = [
+    aws_subnet.public_a.id,
+    aws_subnet.public_b.id
+  ]
 }
 
 resource "aws_lb_target_group" "web_tg" {
@@ -115,7 +130,7 @@ resource "aws_instance" "db" {
   ami                    = "ami-0da6daf1cd16df4e7"
   instance_type          = var.instance_type
   key_name               = var.key_name
-  subnet_id              = aws_subnet.public.id
+  subnet_id              = aws_subnet.public_a.id
   vpc_security_group_ids = [aws_security_group.db_sg.id]
   tags                   = {
     Name = "mysql-db"
