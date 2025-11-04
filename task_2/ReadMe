@@ -11,7 +11,6 @@ docker run -d \
   -v ~/jenkins_home:/var/jenkins_home \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v ~/jenkins_aws_keys:/keys \
-  -v ~/.aws:/var/jenkins_home/.aws \
   --user root jenkins-task2
 # Obtain admin Jenkins password
 docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword

@@ -5,6 +5,8 @@ pipeline {
         TF_DIR = './task_2/terraform'
         ANSIBLE_DIR = './task_2/ansible'
         HOSTS_FILE = "${ANSIBLE_DIR}/hosts.ini"
+        AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
     }
 
     stages {
