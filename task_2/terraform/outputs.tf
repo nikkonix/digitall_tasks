@@ -7,5 +7,5 @@ output "alb_dns_name" {
 }
 
 output "db_endpoint" {
-  value = aws_db_instance.mydb.endpoint
+  value = aws_instance.db.public_ip
 }
