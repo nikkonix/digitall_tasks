@@ -108,18 +108,19 @@ resource "aws_security_group" "db_sg" {
 
 # Web Server Instances
 resource "aws_instance" "web" {
-  count                  = var.web_instance_count
-  ami                    = "ami-0da6daf1cd16df4e7"
-  instance_type          = var.instance_type
-  key_name               = var.key_name
-  subnet_id              = element(
+  count                       = var.web_instance_count
+  ami                         = "ami-0da6daf1cd16df4e7"
+  instance_type               = var.instance_type
+  key_name                    = var.key_name
+  subnet_id                   = element(
                             [aws_subnet.public_a.id, aws_subnet.public_b.id],
                             count.index % 2
                           )
-  vpc_security_group_ids = [aws_security_group.web_sg.id]
-  tags                   = {
+  vpc_security_group_ids      = [aws_security_group.web_sg.id]
+  tags                        = {
     Name = "WebServer-${count.index}"
   }
+  associate_public_ip_address = true
 }
 
 # Load Balancer
@@ -161,13 +162,14 @@ resource "aws_lb_target_group_attachment" "web_attachment" {
 
 # MySQL Server Instances
 resource "aws_instance" "db" {
-  ami                    = "ami-0da6daf1cd16df4e7"
-  instance_type          = var.instance_type
-  key_name               = var.key_name
-  subnet_id              = aws_subnet.public_a.id
-  vpc_security_group_ids = [aws_security_group.db_sg.id]
-  tags                   = {
+  ami                         = "ami-0da6daf1cd16df4e7"
+  instance_type               = var.instance_type
+  key_name                    = var.key_name
+  subnet_id                   = aws_subnet.public_a.id
+  vpc_security_group_ids      = [aws_security_group.db_sg.id]
+  tags                        = {
     Name = "mysql-db"
   }
+  associate_public_ip_address = true
 }
 
