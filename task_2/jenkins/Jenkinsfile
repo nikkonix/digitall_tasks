@@ -8,13 +8,6 @@ pipeline {
     }
 
     stages {
-
-        stage('Checkout Code') {
-            steps {
-                git branch: 'main', url: 'https://github.com/yourusername/infrastructure-repo.git'
-            }
-        }
-
         stage('Terraform Init & Apply') {
             steps {
                 dir("${TF_DIR}") {
