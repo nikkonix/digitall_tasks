@@ -1,0 +1,91 @@
+pipeline {
+    agent any
+
+    environment {
+        TF_DIR = './terraform'
+        ANSIBLE_DIR = './ansible'
+        HOSTS_FILE = "${ANSIBLE_DIR}/hosts.ini"
+    }
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/yourusername/infrastructure-repo.git'
+            }
+        }
+
+        stage('Terraform Init & Apply') {
+            steps {
+                dir("${TF_DIR}") {
+                    sh '''
+                        terraform init -input=false
+                        terraform apply -auto-approve
+                    '''
+                }
+            }
+        }
+
+        stage('Extract Terraform Outputs') {
+            steps {
+                dir("${TF_DIR}") {
+                    script {
+                        // Get outputs in JSON format
+                        def tf_output = sh(script: 'terraform output -json', returnStdout: true).trim()
+                        def parsed = readJSON text: tf_output
+
+                        // Extract values
+                        def web_ips = parsed.web_public_ips.value
+                        def db_endpoint = parsed.db_endpoint.value
+
+                        // Print for visibility
+                        echo "Web IPs: ${web_ips}"
+                        echo "DB Endpoint: ${db_endpoint}"
+
+                        // Write hosts.ini dynamically
+                        writeFile file: "${HOSTS_FILE}", text: """
+[webservers]
+${web_ips.collect { it + " ansible_user=ec2-user ansible_ssh_private_key_file=~/.ssh/id_rsa" }.join('\n')}
+
+[db]
+${db_endpoint} ansible_user=ec2-user ansible_ssh_private_key_file=~/.ssh/id_rsa
+                        """.stripIndent()
+
+                        echo "✅ Generated hosts.ini successfully:"
+                        sh "cat ${HOSTS_FILE}"
+                    }
+                }
+            }
+        }
+
+        stage('Ansible Setup') {
+            steps {
+                dir("${ANSIBLE_DIR}") {
+                    sh '''
+                        ansible --version
+                        echo "Inventory file:"
+                        cat hosts.ini
+                    '''
+                }
+            }
+        }
+
+        stage('Run Ansible Playbook') {
+            steps {
+                dir("${ANSIBLE_DIR}") {
+                    sh '''
+                        ansible-playbook -i hosts.ini playbook.yml
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo "Pipeline finished. Cleaning up workspace..."
+        }
+    }
+}
+
+
