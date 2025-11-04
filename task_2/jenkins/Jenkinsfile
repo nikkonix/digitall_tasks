@@ -59,7 +59,7 @@ ${db_endpoint} ansible_user=ec2-user ansible_ssh_private_key_file=~/keys/test-ke
                     sh '''
                         ansible --version
                         echo "Inventory file:"
-                        cat hosts.ini
+                        cat ${HOSTS_FILE}
                     '''
                 }
             }
@@ -69,7 +69,7 @@ ${db_endpoint} ansible_user=ec2-user ansible_ssh_private_key_file=~/keys/test-ke
             steps {
                 dir("${ANSIBLE_DIR}") {
                     sh '''
-                        ansible-playbook -i hosts.ini playbook.yml
+                        ansible-playbook -i ${HOSTS_FILE} playbook.yml
                     '''
                 }
             }
