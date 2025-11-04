@@ -41,20 +41,10 @@ resource "aws_security_group" "web_sg" {
 resource "aws_instance" "web" {
   count         = var.web_instance_count
   ami           = "ami-0c94855ba95c71c99" # Amazon Linux 2
-  instance_type = "t2.micro"
+  instance_type = var.instance_type
   key_name      = var.key_name
   subnet_id     = aws_subnet.public.id
   security_groups = [aws_security_group.web_sg.name]
-
-  user_data = <<-EOF
-              #!/bin/bash
-              yum update -y
-              yum install -y nginx
-              systemctl enable nginx
-              systemctl start nginx
-              echo "Hello from Terraform Web Server $(hostname)" > /usr/share/nginx/html/index.html
-              EOF
-
   tags = {
     Name = "WebServer-${count.index}"
   }
@@ -94,19 +84,17 @@ resource "aws_lb_target_group_attachment" "web_attachment" {
   port             = 80
 }
 
-# RDS MySQL Database
-resource "aws_db_instance" "mydb" {
-  allocated_storage    = 20
-  engine               = "mysql"
-  engine_version       = "8.0"
-  instance_class       = "db.t2.micro"
-  name                 = var.db_name
-  username             = var.db_user
-  password             = var.db_password
-  skip_final_snapshot  = true
-  publicly_accessible  = true
+# MySQL Server Instances
+resource "aws_instance" "db" {
+  ami           = "ami-0c94855ba95c71c99"
+  instance_type = var.instance_type
+  key_name      = var.key_name
+  subnet_id     = aws_subnet.public.id
   vpc_security_group_ids = [aws_security_group.web_sg.id]
-  db_subnet_group_name = aws_db_subnet_group.main.name
+
+  tags = {
+    Name = "mysql-db"
+  }
 }
 
 resource "aws_db_subnet_group" "main" {
