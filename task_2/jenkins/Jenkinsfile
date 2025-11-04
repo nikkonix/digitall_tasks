@@ -30,7 +30,7 @@ pipeline {
                         def parsed = readJSON text: tf_output
 
                         // Extract values
-                        def web_ips = parsed.web_public_ips.value
+                        def web_ips = parsed.web_server_ips.value
                         def db_endpoint = parsed.db_endpoint.value
 
                         // Print for visibility
