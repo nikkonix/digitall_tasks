@@ -37,6 +37,33 @@ resource "aws_security_group" "web_sg" {
   }
 }
 
+resource "aws_security_group" "db_sg" {
+  name        = "db_sg"
+  description = "Allow MySQL and SSH"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
 # Web Server Instances
 resource "aws_instance" "web" {
   count         = var.web_instance_count
@@ -90,16 +117,10 @@ resource "aws_instance" "db" {
   instance_type = var.instance_type
   key_name      = var.key_name
   subnet_id     = aws_subnet.public.id
-  vpc_security_group_ids = [aws_security_group.web_sg.id]
+  vpc_security_group_ids = [aws_security_group.db_sg.id]
 
   tags = {
     Name = "mysql-db"
   }
 }
-
-resource "aws_db_subnet_group" "main" {
-  name       = "db-subnet-group"
-  subnet_ids = [aws_subnet.public.id]
-}
-
 
