@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        TF_DIR = './task_2/taskterraform'
+        TF_DIR = './task_2/terraform'
         ANSIBLE_DIR = './task_2/ansible'
         HOSTS_FILE = "${ANSIBLE_DIR}/hosts.ini"
     }
