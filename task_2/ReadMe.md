@@ -21,13 +21,13 @@ Includes:
 
 ## 🚀 Инструкции за стартиране
 
-# Github Repo
+### Github Repo
 https://github.com/nikkonix/digitall_tasks.git
-# Working folder
+### Working folder
 task_2 
-# Build Jenkins image with all we need
+### Build Jenkins image with all we need
 docker build -t jenkins-task2 .
-# Start the Jenkins container
+### Start the Jenkins container
 mkdir -p ~/jenkins_home
 mkdir -p ~/jenkins_aws_keys
 cp test-key.pem ~/jenkins_aws_keys/ # Need it key for provisioning the instances via Ansible
@@ -39,14 +39,16 @@ docker run -d \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v ~/jenkins_aws_keys:/keys \
   --user root jenkins-task2         # Bring up the  Jenkins container 
-# Obtain admin Jenkins password
+### Obtain admin Jenkins password
 docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
-# Connect and finish Jenkins setup
+### Connect and finish Jenkins setup
 Open in browser  -> http://localhost:8080
-# Install necessarry plugins from Jenkins UI
+### Install necessarry plugins from Jenkins UI
 Git, Terraform, Ansible, Pipeline: AWS Steps, Pipeline Utility Steps
-# Create both secrets AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in Jenkins
-# They will be used from the pipeline which dpeloys the infrastructure to AWS
-# Create pipeline when Jenkins is ready pointing use the Jenkinsfile from jenkins folder 
-# Trigger the pipeline
+- Create both secrets AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in Jenkins
+- They will be used from the pipeline which dpeloys the infrastructure to AWS
+- Create pipeline when Jenkins is ready pointing use the Jenkinsfile from jenkins folder 
+- Trigger the pipeline
+
+** P.S Not fully tested , part with ansible provisioning ssh connection does not work **
 
