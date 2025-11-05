@@ -37,7 +37,7 @@ pipeline {
                         echo "DB Endpoint: ${db_endpoint}"
 
                         // Write hosts.ini dynamically
-                        def hostsFile = "${ANSIBLE_DIR}/hosts.ini"
+                        def HOSTS_FILE = "${ANSIBLE_DIR}/hosts.ini"
                         writeFile file: "${HOSTS_FILE}", text: """
 [webservers]
 ${web_ips.collect { it + " ansible_user=ec2-user ansible_ssh_private_key_file=~/keys/test-key.pem" }.join('\n')}
