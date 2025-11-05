@@ -45,10 +45,11 @@ docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
 Open in browser  -> http://localhost:8080
 ### Install necessarry plugins from Jenkins UI
 Git, Terraform, Ansible, Pipeline: AWS Steps, Pipeline Utility Steps
+### Need to be done
 - Create both secrets AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in Jenkins
 - They will be used from the pipeline which dpeloys the infrastructure to AWS
 - Create pipeline when Jenkins is ready pointing use the Jenkinsfile from jenkins folder 
 - Trigger the pipeline
 
-** P.S Not fully tested , part with ansible provisioning ssh connection does not work **
+**P.S Not fully tested , part with ansible provisioning ssh connection does not work**
 
