@@ -12,7 +12,7 @@ pipeline {
     stages {
         stage('Terraform Init & Apply') {
             steps {
-                dir("${TF_DIR}") {
+                dir("/.task_2/${TF_DIR}") {
                     sh '''
                         terraform init -input=false
                         terraform apply -auto-approve
