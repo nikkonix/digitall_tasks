@@ -1,4 +1,4 @@
-# DevOps Task 2 - AWS IaC Автоматизация
+# DevOps Task 2 - AWS IaC Automation
 
 ## Description
 
