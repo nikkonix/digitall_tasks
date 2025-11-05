@@ -80,16 +80,16 @@ ${db_endpoint} ansible_user=ec2-user ansible_ssh_private_key_file=/keys/test-key
         }
     }
 
-    post {
-        failure {
-            dir("./task_2/${TF_DIR}") {
-                echo "Pipeline failed. Terraform detroy"
-                sh '''
-                        terraform destroy -auto-approve
-                    '''
-                }
-        }
-    }
+    //post {
+    //    failure {
+    //        dir("./task_2/${TF_DIR}") {
+    //            echo "Pipeline failed. Terraform detroy"
+    //            sh '''
+    //                    terraform destroy -auto-approve
+    //                '''
+    //            }
+    //    }
+    //}
 }
 
 
