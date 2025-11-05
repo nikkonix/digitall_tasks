@@ -48,6 +48,8 @@ ${db_endpoint} ansible_user=ec2-user ansible_ssh_private_key_file=~/keys/test-ke
 
                         echo "Generated hosts.ini successfully:"
                         sh "cat ${HOSTS_FILE}"
+                        ls -l ${TF_DIR}
+                        ls -l ${ANSIBLE_DIR}
                         stash includes: "${HOSTS_FILE}", name: 'hosts_file'
                     }
                 }
