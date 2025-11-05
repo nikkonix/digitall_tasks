@@ -12,7 +12,7 @@ pipeline {
     stages {
         stage('Terraform Init & Apply') {
             steps {
-                dir("/.task_2/${TF_DIR}") {
+                dir("./task_2/${TF_DIR}") {
                     sh '''
                         terraform init -input=false
                         terraform apply -auto-approve
@@ -59,7 +59,7 @@ ${db_endpoint} ansible_user=ec2-user ansible_ssh_private_key_file=~/keys/test-ke
 
         stage('Ansible Setup') {
             steps {
-                dir("/.task_2/${ANSIBLE_DIR}") {
+                dir("./task_2/${ANSIBLE_DIR}") {
                     sh '''
                         ansible --version
                         echo "Inventory file:"
@@ -71,7 +71,7 @@ ${db_endpoint} ansible_user=ec2-user ansible_ssh_private_key_file=~/keys/test-ke
 
         stage('Run Ansible Playbook') {
             steps {
-                dir("/.task_2/${ANSIBLE_DIR}") {
+                dir("./task_2/${ANSIBLE_DIR}") {
                     sh '''
                         ansible-playbook -i ${HOSTS_FILE} playbook.yml
                     '''
@@ -82,7 +82,7 @@ ${db_endpoint} ansible_user=ec2-user ansible_ssh_private_key_file=~/keys/test-ke
 
     post {
         failure {
-            dir("${TF_DIR}") {
+            dir("./task_2/${TF_DIR}") {
                 echo "Pipeline failed. Terraform detroy"
                 sh '''
                         terraform destroy -auto-approve
