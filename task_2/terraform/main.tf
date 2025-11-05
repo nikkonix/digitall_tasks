@@ -120,7 +120,7 @@ resource "aws_instance" "web" {
   tags                        = {
     Name = "WebServer-${count.index}"
   }
-  associate_public_ip_address = true
+  associate_public_ip_address = true // Using real ip for Ansbible as for the demo is outside of the vpc
 }
 
 # Load Balancer
@@ -170,6 +170,6 @@ resource "aws_instance" "db" {
   tags                        = {
     Name = "mysql-db"
   }
-  associate_public_ip_address = true
+  associate_public_ip_address = true // Using real ip for Ansbible as for the demo is outside of the vpc
 }
 

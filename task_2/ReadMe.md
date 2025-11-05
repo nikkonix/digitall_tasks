@@ -1,3 +1,26 @@
+# DevOps Task 2 - AWS IaC Автоматизация
+
+## Description
+
+This project tries to create automation for creating simple infrastructure on AWS, using Terraform, Ansible and Jenkins   
+Includes:
+- 1 Load Balancer
+- 2 Web servers wit Nginx
+- 1 MySQL DB
+
+---
+
+## ⚙️ Технологии
+
+- **Terraform** – IaC - Creates the infrastructure on AWS
+- **Ansible** – Configuration automation - for the web and db servers
+- **Jenkins** – CI/CD pipeline for auto deployment
+- **AWS Free Tier** is using 
+
+---
+
+## 🚀 Инструкции за стартиране
+
 # Github Repo
 https://github.com/nikkonix/digitall_tasks.git
 # Working folder
@@ -24,3 +47,6 @@ Open in browser  -> http://localhost:8080
 Git, Terraform, Ansible, Pipeline: AWS Steps, Pipeline Utility Steps
 # Create both secrets AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in Jenkins
 # They will be used from the pipeline which dpeloys the infrastructure to AWS
+# Create pipeline when Jenkins is ready pointing use the Jenkinsfile from jenkins folder 
+# Trigger the pipeline
+
