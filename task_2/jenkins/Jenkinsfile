@@ -13,8 +13,9 @@ pipeline {
                 dir("./task_2/${TF_DIR}") {
                     // Init&deploy infrastructre
                     sh '''
-                        terraform init -input=false
-                        terraform apply -auto-approve
+                        terraform destroy -auto-approve
+                        #terraform init -input=false
+                        #terraform apply -auto-approve
                     '''
                 }
             }
