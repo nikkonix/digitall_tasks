@@ -187,4 +187,4 @@ resource "aws_instance" "db" {
     Name = "mysql-db"
   }
   associate_public_ip_address = true // Using real ip for ssh and debugging purposes 
-
+}
