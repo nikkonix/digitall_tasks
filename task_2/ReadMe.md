@@ -28,9 +28,6 @@ task_2
 docker build -t jenkins-task2 .
 ### Start the Jenkins container
 mkdir -p ~/jenkins_home
-mkdir -p ~/jenkins_aws_keys
-cp test-key.pem ~/jenkins_aws_keys/ # Need it key for provisioning the instances via Ansible
-chmod 400 ~/jenkins_aws_keys/test-key.pem
 docker run -d \
   --name jenkins \
   -p 8080:8080 -p 50000:50000 \
