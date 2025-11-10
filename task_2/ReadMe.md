@@ -45,4 +45,7 @@ Git, Terraform, Pipeline: AWS Steps, Pipeline Utility Steps
 - They will be used from the pipeline which dpeloys the infrastructure to AWS
 - Create pipeline when Jenkins is ready pointing use the Jenkinsfile from jenkins folder 
 - Trigger the pipeline
+### Verify web is up and running
+- Pipeline output should be checked in order to obatin Load Balancer url
+- Load the url in browser and following message should appear -> **Completed task 2 <hostname_of_web_server>**
 
