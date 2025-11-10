@@ -117,10 +117,19 @@ resource "aws_instance" "web" {
                             count.index % 2
                           )
   vpc_security_group_ids      = [aws_security_group.web_sg.id]
+  user_data = <<-EOF
+              #!/bin/bash
+              yum update -y
+              amazon-linux-extras install -y nginx1
+              systemctl enable nginx
+              systemctl start nginx
+              echo "Completed task 2 $(hostname)" > /usr/share/nginx/html/index.html
+              EOF
+
   tags                        = {
     Name = "WebServer-${count.index}"
   }
-  associate_public_ip_address = true // Using real ip for Ansbible as for the demo is outside of the vpc
+  associate_public_ip_address = true // Using real ip for ssh and debugging purposes 
 }
 
 # Load Balancer
@@ -167,9 +176,15 @@ resource "aws_instance" "db" {
   key_name                    = var.key_name
   subnet_id                   = aws_subnet.public_a.id
   vpc_security_group_ids      = [aws_security_group.db_sg.id]
+  user_data = <<-EOF
+              #!/bin/bash
+              yum update -y
+              yum install -y mariadb
+              systemctl enable mariadb
+              systemctl start mariadb
+              EOF
   tags                        = {
     Name = "mysql-db"
   }
-  associate_public_ip_address = true // Using real ip for Ansbible as for the demo is outside of the vpc
+  associate_public_ip_address = true // Using real ip for ssh and debugging purposes 
 }
-

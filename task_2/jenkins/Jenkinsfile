@@ -3,8 +3,6 @@ pipeline {
 
     environment {
         TF_DIR = 'terraform'
-        ANSIBLE_DIR = 'ansible'
-        HOSTS_FILE = 'hosts.ini'
         AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
     }
@@ -13,6 +11,7 @@ pipeline {
         stage('Terraform Init & Apply') {
             steps {
                 dir("./task_2/${TF_DIR}") {
+                    // Init&deploy infrastructre
                     sh '''
                         terraform init -input=false
                         terraform apply -auto-approve
@@ -36,45 +35,7 @@ pipeline {
                         // Print for visibility
                         echo "Web IPs: ${web_ips}"
                         echo "DB Endpoint: ${db_endpoint}"
-
-                        // Write hosts.ini dynamically
-                        writeFile file: "${HOSTS_FILE}", text: """
-[webservers]
-${web_ips.collect { it + " ansible_user=ec2-user ansible_ssh_private_key_file=/keys/test-key.pem" }.join('\n')}
-
-[db]
-${db_endpoint} ansible_user=ec2-user ansible_ssh_private_key_file=/keys/test-key.pem
-                        """.stripIndent()
-
-                        echo "Generated hosts.ini successfully:"
-                        sh "cat ${HOSTS_FILE}"
-                        sh "cp ${HOSTS_FILE} ../${ANSIBLE_DIR}"
-                        sh "ls -l ."
-                        sh "ls -l ../${ANSIBLE_DIR}"
-                        sh "cat ../${ANSIBLE_DIR}/${HOSTS_FILE}"
                     }
-                }
-            }
-        }
-
-        stage('Ansible Setup') {
-            steps {
-                dir("./task_2/${ANSIBLE_DIR}") {
-                    sh '''
-                        ansible --version
-                        echo "Inventory file:"
-                        cat ${HOSTS_FILE}
-                    '''
-                }
-            }
-        }
-
-        stage('Run Ansible Playbook') {
-            steps {
-                dir("./task_2/${ANSIBLE_DIR}") {
-                    sh '''
-                        ansible-playbook -i ${HOSTS_FILE} playbook.yml
-                    '''
                 }
             }
         }
