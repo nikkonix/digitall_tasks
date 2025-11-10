@@ -120,7 +120,7 @@ resource "aws_instance" "web" {
   user_data = <<-EOF
               #!/bin/bash
               yum update -y
-              yum install -y nginx
+              amazon-linux-extras install -y nginx1
               systemctl enable nginx
               systemctl start nginx
               echo "Completed task 2 $(hostname)" > /usr/share/nginx/html/index.html
