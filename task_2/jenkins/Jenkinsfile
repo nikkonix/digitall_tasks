@@ -14,8 +14,8 @@ pipeline {
                     // Init&deploy infrastructre
                     sh '''
                         terraform destroy -auto-approve
-                        terraform init -input=false
-                        terraform apply -auto-approve
+                        #terraform init -input=false
+                        #terraform apply -auto-approve
                     '''
                 }
             }
