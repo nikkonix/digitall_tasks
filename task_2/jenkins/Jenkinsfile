@@ -6,9 +6,16 @@ pipeline {
         AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
     }
-
+    parameters { 
+        choice(name: 'ENVIRONMENT', choices: ['deploy', 'destroy'], description: 'To deploy or destroy the environment') 
+        }
     stages {
         stage('Terraform Init & Apply') {
+            when {
+                expression { 
+                   return params.ENVIRONMENT == 'deploy'
+                }
+            }
             steps {
                 dir("./task_2/${TF_DIR}") {
                     // Init&deploy infrastructre
@@ -19,8 +26,12 @@ pipeline {
                 }
             }
         }
-
         stage('Extract Terraform Outputs') {
+            when {
+                expression { 
+                   return params.ENVIRONMENT == 'deploy'
+                }
+            }
             steps {
                 dir("./task_2/${TF_DIR}") {
                     script {
@@ -36,6 +47,21 @@ pipeline {
                         echo "Web IPs: ${web_ips}"
                         echo "DB Endpoint: ${db_endpoint}"
                     }
+                }
+            }
+        }
+        stage('Terraform Destroy') {
+            when {
+                expression { 
+                   return params.ENVIRONMENT == 'deploy'
+                }
+            }
+            steps {
+                dir("./task_2/${TF_DIR}") {
+                    // Init&deploy infrastructre
+                    sh '''
+                        terraform destroy -auto-approve
+                    '''
                 }
             }
         }
