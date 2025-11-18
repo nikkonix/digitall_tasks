@@ -53,7 +53,7 @@ pipeline {
         stage('Terraform Destroy') {
             when {
                 expression { 
-                   return params.ENVIRONMENT == 'deploy'
+                   return params.ENVIRONMENT == 'destroy'
                 }
             }
             steps {
